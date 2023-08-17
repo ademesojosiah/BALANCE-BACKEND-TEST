@@ -2,7 +2,6 @@ package com.balancee.test.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@NoArgsConstructor 
 @Table(name = "task_table")
 public class Task {
 
@@ -35,5 +33,14 @@ public class Task {
     @Column(nullable = false)
 
     private LocalDate dueDate;
-    private boolean isCompleted;
+    private boolean Completed;
+
+    @ManyToOne(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "userId"
+    )
+    private User user;
 }
