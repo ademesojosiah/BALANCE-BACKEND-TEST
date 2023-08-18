@@ -5,6 +5,7 @@ import com.balancee.test.service.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 
     private final JpaUserDetailsService jpaUserDetailsService;
@@ -35,19 +37,31 @@ public class SecurityConfiguration {
 
 
     @Bean
+    @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
 
         http.
                 csrf(csrf -> csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")))
                 .csrf(csrf -> csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/tasks**")))
                 .csrf(csrf -> csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/tasks/**")))
-                .authorizeHttpRequests((requests) -> requests
-                        .anyRequest().authenticated())
                 .userDetailsService(jpaUserDetailsService)
                 .headers(headers->headers.frameOptions().sameOrigin())
                 .httpBasic(Customizer.withDefaults());
 
               return   http.build();
+    }
+
+    @Bean
+    @Order(2)
+    SecurityFilterChain signUpFilterChain(HttpSecurity http)throws Exception{
+        return http
+                .securityMatcher(AntPathRequestMatcher.antMatcher("/signup"))
+                .authorizeHttpRequests(auth->{
+                    auth.requestMatchers(AntPathRequestMatcher.antMatcher("/signup")).permitAll();
+                })
+                .csrf(csrf->csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/signup")))
+                .headers(headers->headers.frameOptions().disable())
+                .build();
     }
 
     // use bcrypt to hash password

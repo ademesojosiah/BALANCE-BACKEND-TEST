@@ -52,6 +52,14 @@ Ensure you are authenticated before making requests. You can authenticate using 
 
 ## Endpoints
 
+### Register User
+
+```http
+GET /signup?username=george&password=osime
+```
+
+create a user
+
 ### Get All Tasks
 
 ```http
