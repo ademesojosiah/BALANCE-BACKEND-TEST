@@ -63,7 +63,7 @@ public class TaskService {
         Long userId = this.getUserIdByUsername(username);
 
         if(!this.isOwner(userId,taskId)){
-            throw new IllegalStateException("Unauthorised to update task id: "+ taskId);
+            throw new IllegalStateException("Unauthorised to completeTask task id: "+ taskId);
         }
 
         Task updatedtask = taskRepository.findById(taskId)
@@ -83,7 +83,7 @@ public class TaskService {
         }
 
         if(!this.isOwner(userId,taskId)){
-            throw new IllegalStateException("Unauthorised to update task id: "+ taskId);
+            throw new IllegalStateException("Unauthorised to delete task id: "+ taskId);
         }
 
 
@@ -114,7 +114,7 @@ public class TaskService {
             throw new IllegalStateException("task id "+ taskId +" does not exist");
         }
         if(!this.isOwner(userId,taskId)){
-            throw new IllegalStateException("Unauthorised to update task id: "+ taskId);
+            throw new IllegalStateException("Unauthorised to getTaskById with task id: "+ taskId);
         }
 
         return taskRepository.findById(taskId)

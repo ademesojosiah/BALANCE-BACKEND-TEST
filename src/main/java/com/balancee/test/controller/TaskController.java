@@ -60,7 +60,7 @@ public class TaskController {
      * @param task   Updated task object
      * @return Updated task
      */
-    @PutMapping("/{userId}/{taskId}")
+    @PutMapping("/{taskId}")
     public ResponseEntity<Task> updateTask(@PathVariable Long taskId, @RequestBody Task task, @AuthenticationPrincipal UserDetails userInfo) {
         String username = userInfo.getUsername();
         Task updatedTask = taskService.updateTask(taskId, task,username);
@@ -75,7 +75,7 @@ public class TaskController {
      * @return Success message
      */
 
-    @PutMapping("/{userId}/{taskId}/complete")
+    @PutMapping("/{taskId}/complete")
     public ResponseEntity<String > completeTask(@PathVariable("taskId") Long taskId, @AuthenticationPrincipal UserDetails userInfo){
         String username = userInfo.getUsername();
         taskService.completeTask(taskId, username);
@@ -90,7 +90,7 @@ public class TaskController {
      * @param userInfo from spring security ID of the task to delete
      * @return Success message
      */
-    @DeleteMapping("/{userId}/{taskId}")
+    @DeleteMapping("/{taskId}")
     public ResponseEntity<String > deleteTask(@PathVariable("taskId") Long taskId, @AuthenticationPrincipal UserDetails userInfo){
         String username = userInfo.getUsername();
         taskService.deleteTaskById(taskId,username);
@@ -104,7 +104,7 @@ public class TaskController {
      * @param taskId ID of the task to retrieve
      * @return Task with the given ID
      */
-    @GetMapping("/{userId}/{taskId}")
+    @GetMapping("/{taskId}")
     public ResponseEntity<Task> getTaskById(@PathVariable("taskId") Long taskId, @AuthenticationPrincipal UserDetails userInfo){
         String username = userInfo.getUsername();
         Task task = taskService.getTaskById(taskId,username);

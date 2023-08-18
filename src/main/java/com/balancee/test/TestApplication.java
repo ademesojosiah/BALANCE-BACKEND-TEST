@@ -8,15 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-@RequestMapping("api/v1/test")
 public class TestApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TestApplication.class, args);
-	}
-	@GetMapping
-	public String getHelloWorld(){
-		return "hello world";
 	}
 
 }
