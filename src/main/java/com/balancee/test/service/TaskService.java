@@ -19,8 +19,15 @@ public class TaskService {
     private UserRepository userRepository;
 
     // Create a new task and associate it with a user
-    public Task createNewTask(Task task, Long userId){
+    public Task createNewTask(Task task, String username){
+
+        // Get userId from the username
+
+        Long userId = this.getUserIdByUsername(username);
+
+        //validate input
         this.validator(task);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new IllegalStateException("user with id: "+ userId+ " doesn't exist"));
         task.setUser(user);
@@ -29,7 +36,12 @@ public class TaskService {
 
 
     // Update a task and validate ownership before updating
-    public Task updateTask(Long taskId , Task task, Long userId){
+    public Task updateTask(Long taskId , Task task, String username){
+
+        //Get userId by username
+        Long userId = this.getUserIdByUsername(username);
+
+
         Task updatedtask = taskRepository.findById(taskId)
                 .orElseThrow(()-> new IllegalStateException("task id "+ taskId +" does not exist"));
         if(!this.isOwner(userId,taskId)){
@@ -45,7 +57,11 @@ public class TaskService {
     }
 
     // Validate ownership and Mark a task as completed
-    public void completeTask(Long taskId, Long userId){
+    public void completeTask(Long taskId, String username){
+
+        //Get userId by username
+        Long userId = this.getUserIdByUsername(username);
+
         if(!this.isOwner(userId,taskId)){
             throw new IllegalStateException("Unauthorised to update task id: "+ taskId);
         }
@@ -57,7 +73,11 @@ public class TaskService {
 
 
     // Validate ownership and Delete a task by ID
-    public void deleteTaskById(Long taskId, Long userId){
+    public void deleteTaskById(Long taskId, String username){
+
+        //Get userIdByUsername
+        Long userId = this.getUserIdByUsername(username);
+
         if(!this.isExists(taskId)){
             throw new IllegalStateException("task id "+ taskId +" does not exist");
         }
@@ -71,7 +91,8 @@ public class TaskService {
     }
 
     // Get all tasks with optional filtering by completion status
-    public List<Task> getAllTasks(String completed, Long userId){
+    public List<Task> getAllTasks(String completed, String username){
+        Long userId = this.getUserIdByUsername(username);
 
         if(completed == null)
             return taskRepository.GetTasksByUserId(userId);
@@ -84,7 +105,11 @@ public class TaskService {
     }
 
     // Validate ownership and  Get a task by ID
-    public Task getTaskById(Long taskId, Long userId){
+    public Task getTaskById(Long taskId, String username){
+
+        //Get userId from username
+        Long userId = this.getUserIdByUsername(username);
+
         if(!this.isExists(taskId)){
             throw new IllegalStateException("task id "+ taskId +" does not exist");
         }
@@ -117,6 +142,13 @@ public class TaskService {
     public boolean isOwner(Long userId, Long taskId){
         Task task = taskRepository.getUserByTaskAndId(userId,taskId);
         return task != null;
+    }
+
+
+    // Get the  userId from username passed from spring security
+    public Long getUserIdByUsername(String username){
+        User user = userRepository.findByUsername(username).orElse(null);
+        return user.getUserId();
     }
 
 
