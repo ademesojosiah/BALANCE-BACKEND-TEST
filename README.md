@@ -48,7 +48,7 @@ The Task Management API is a RESTful web service built with Spring Boot that all
 
 To use the API, you can interact with it using HTTP requests. You can use tools like `curl`, Postman, or any other REST client.
 
-Ensure you are authenticated before making requests. You can authenticate using Spring Security's basic authentication.
+Ensure you are authenticated before making requests. You can authenticate using  basic authentication.
 
 ## Endpoints
 

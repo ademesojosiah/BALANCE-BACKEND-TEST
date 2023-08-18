@@ -31,7 +31,7 @@ public class TaskController {
      */
     @GetMapping
     public ResponseEntity<List<Task>>  getAllTasks(@RequestParam(required = false) String completed, @AuthenticationPrincipal UserDetails userInfo) {
-        String username = userInfo.getUsername();
+        String username = this.authenticate(userInfo);
         List<Task> tasks = taskService.getAllTasks(completed,username);
         return ResponseEntity.ok(tasks);
     }
@@ -45,7 +45,7 @@ public class TaskController {
      */
     @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody Task task, @AuthenticationPrincipal UserDetails userInfo) {
-        String username = userInfo.getUsername();
+        String username = this.authenticate(userInfo);
         Task createdTask = taskService.createNewTask(task,username);
         return ResponseEntity.ok(createdTask);
     }
@@ -62,7 +62,7 @@ public class TaskController {
      */
     @PutMapping("/{taskId}")
     public ResponseEntity<Task> updateTask(@PathVariable Long taskId, @RequestBody Task task, @AuthenticationPrincipal UserDetails userInfo) {
-        String username = userInfo.getUsername();
+        String username = this.authenticate(userInfo);
         Task updatedTask = taskService.updateTask(taskId, task,username);
         return ResponseEntity.ok(updatedTask);
     }
@@ -77,7 +77,7 @@ public class TaskController {
 
     @PutMapping("/{taskId}/complete")
     public ResponseEntity<String > completeTask(@PathVariable("taskId") Long taskId, @AuthenticationPrincipal UserDetails userInfo){
-        String username = userInfo.getUsername();
+        String username = this.authenticate(userInfo);
         taskService.completeTask(taskId, username);
         return ResponseEntity.ok("Successfully completed task id: "+ taskId);
     }
@@ -92,7 +92,7 @@ public class TaskController {
      */
     @DeleteMapping("/{taskId}")
     public ResponseEntity<String > deleteTask(@PathVariable("taskId") Long taskId, @AuthenticationPrincipal UserDetails userInfo){
-        String username = userInfo.getUsername();
+        String username = this.authenticate(userInfo);
         taskService.deleteTaskById(taskId,username);
         return ResponseEntity.ok("Successfully delete task id: "+ taskId);
     }
@@ -106,10 +106,23 @@ public class TaskController {
      */
     @GetMapping("/{taskId}")
     public ResponseEntity<Task> getTaskById(@PathVariable("taskId") Long taskId, @AuthenticationPrincipal UserDetails userInfo){
-        String username = userInfo.getUsername();
+        String username = this.authenticate(userInfo);
         Task task = taskService.getTaskById(taskId,username);
         return ResponseEntity.ok(task);
     }
+
+    /**
+     * authenticate
+     *
+     * @param userInfo of the task to retrieve
+     * @return String username
+     */
+    public String authenticate(UserDetails userInfo){
+        if(userInfo == null) throw new IllegalStateException("please perform basic Authentication");
+        return userInfo.getUsername();
+    }
+
+
 
 
 }

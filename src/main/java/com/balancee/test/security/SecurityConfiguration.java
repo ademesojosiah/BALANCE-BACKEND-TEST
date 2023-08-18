@@ -57,10 +57,11 @@ public class SecurityConfiguration {
         return http
                 .securityMatcher(AntPathRequestMatcher.antMatcher("/signup"))
                 .authorizeHttpRequests(auth->{
-                    auth.requestMatchers(AntPathRequestMatcher.antMatcher("/signup")).permitAll();
+                    auth.requestMatchers(AntPathRequestMatcher.antMatcher("/signup")).permitAll()
+                            .anyRequest().authenticated();
                 })
                 .csrf(csrf->csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/signup")))
-                .headers(headers->headers.frameOptions().disable())
+                .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
