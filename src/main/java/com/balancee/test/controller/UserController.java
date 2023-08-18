@@ -12,12 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+
 public class UserController {
 
     @Autowired
     private UserService userService;
 
 
+    /**
+     * Create a new user (signup).
+     *
+     * @param user User object to create
+     * @return Created user
+     */
 
     @PostMapping("/signup")
     public ResponseEntity<User> createUser(@RequestBody User user){
